@@ -1,6 +1,6 @@
 package com.bjpowernode.settings.domain;
 
-import com.bjpowernode.settings.dao.UserDao;
+
 
 /**
  * Auther: 董怀宾_bjpowernode

@@ -6,7 +6,7 @@ package com.bjpowernode.settings.dao;
  * <p>
  * 功能描述：
  */
-public class UserDao {
+public interface UserDao {
 
 
 }
