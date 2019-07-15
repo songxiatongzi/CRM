@@ -1,5 +1,9 @@
 package com.bjpowernode.settings.dao;
 
+import com.bjpowernode.settings.domain.User;
+
+import java.util.Map;
+
 /**
  * Auther: 董怀宾_bjpowernode
  * Date: 2019/7/13 19:25
@@ -9,4 +13,5 @@ package com.bjpowernode.settings.dao;
 public interface UserDao {
 
 
+    User login(Map<String, Object> map);
 }
