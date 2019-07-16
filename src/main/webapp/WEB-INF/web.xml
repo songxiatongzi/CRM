@@ -36,11 +36,25 @@
 
   <servlet-mapping>
     <servlet-name>UserController</servlet-name>
+    <!--用户登陆查询列表-->
     <url-pattern>/settings/user/login.do</url-pattern>
   </servlet-mapping>
-  
-  
-  
+
+  <!--查询所有用户列表-->
+  <servlet>
+    <servlet-name>ActivityController</servlet-name>
+    <servlet-class>com.bjpowernode.workbench.web.controller.ActivityController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ActivityController</servlet-name>
+    <!--查询所有用户列表-->
+    <url-pattern>/workbench/activity/getUserList.do</url-pattern>
+    <!--市场活动添加列表-->
+    <url-pattern>/workbench/activity/saveActivity.do</url-pattern>
+  </servlet-mapping>
+
+
+
 </web-app>
 
 

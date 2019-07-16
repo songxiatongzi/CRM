@@ -11,7 +11,7 @@
   <typeAliases>
     <!--批量起别名-->
     <package name="com.bjpowernode.settings.domain"/>
-
+    <package name="com.bjpowernode.workbench.domain"/>
   </typeAliases>
 
   <environments default="development">
@@ -32,7 +32,7 @@
     <!--批量注册-->
     <!--用户登陆起别名-->
     <package name="com.bjpowernode.settings.dao"/>
-
+    <package name="com.bjpowernode.workbench.dao"/>
   </mappers>
 </configuration>
 

@@ -13,5 +13,10 @@
         and loginPwd=#{loginPwd}
     </select>
 
+    <!--查询所有用户-->
+    <select id="getUserList" resultType="User">
+         select *
+         from tbl_user
+    </select>
 
 </mapper>

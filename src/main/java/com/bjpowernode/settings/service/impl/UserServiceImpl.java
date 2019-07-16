@@ -8,6 +8,7 @@ import com.bjpowernode.utils.SqlSessionUtil;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,5 +53,13 @@ public class UserServiceImpl implements UserService {
 
 
         return user;
+    }
+
+    @Override
+    public List<User> getUserList() {
+
+        List<User> userList = userDao.getUserList();
+
+        return userList;
     }
 }

@@ -36,6 +36,9 @@ public class UserController extends HttpServlet {
                 login(request,response);
 
 
+        }else if("/*.do".equals(path)){
+
+
         }
     }
 
