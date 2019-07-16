@@ -5,7 +5,55 @@
 
 <mapper namespace="com.bjpowernode.workbench.dao.ActivityRemarkDao">
 
+    <!--其中的id 相当于循环中的变量
+        选出市场remark 在前端的参数中的值
+    -->
+    <select id="getCountByIds" resultType="int">
 
+         select count(*)
+         from tbl_activity_remark
+         where activityId in
+         <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+         </foreach>
 
+    </select>
 
+    <!--实际删除的数量-->
+    <delete id="deleteRemark">
+        delete from tbl_activity_remark
+        where activityId
+        in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+          #{id}
+        </foreach>
+    </delete>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -39,5 +39,67 @@
 
     </insert>
 
+    <!--查询所有的总条数-->
+    <select id="selectActivityTotal"  resultType="int">
+        select count(*)
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
 
+        <where>
+            <if test="name != null and name != '' ">
+                a.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != '' ">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and a.startDate &gt;'%' #{startDate} '%'
+            </if>
+            <if test="endDate != null and endDate != '' ">
+                and a.endDate &lt; '%' #{endDate} '%'
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectActivityList" resultType="Activity">
+            select
+                a.name,
+                a.id,
+                a.startDate,
+                a.endDate,
+                u.name as owner
+
+            from tbl_activity a
+            join tbl_user u
+            on a.owner = u.id
+
+            <where>
+                <if test="name != null and name != '' ">
+                    a.name like '%' #{name} '%'
+                </if>
+                <if test="owner != null and owner != '' ">
+                    and u.name like '%' #{owner} '%'
+                </if>
+                <if test="startDate != null and startDate != ''">
+                    and a.startDate &gt; '%' #{startDate} '%'
+                </if>
+                <if test="endDate != null and endDate != '' ">
+                    and a.endDate &lt; '%' #{endDate} '%'
+                </if>
+            </where>
+            order by a.createTime desc
+            /*掠过的记录数，当前页的记录*/
+            limit #{skipCount},#{pageSize}
+    </select>
+
+    <!--通过ids删除市场活动列表-->
+    <delete id="delBySelId">
+            delete from tbl_activity
+            where id in
+            <foreach collection="array" item="id" open="(" close=")" separator=",">
+              #{id}
+            </foreach>
+    </delete>
 </mapper>

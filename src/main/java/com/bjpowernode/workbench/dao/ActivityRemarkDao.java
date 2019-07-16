@@ -7,4 +7,7 @@ package com.bjpowernode.workbench.dao;
  * 功能描述：
  */
 public interface ActivityRemarkDao {
+    int getCountByIds(String[] ids);
+
+    int deleteRemark(String[] ids);
 }

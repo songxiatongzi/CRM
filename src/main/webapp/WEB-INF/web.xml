@@ -51,6 +51,10 @@
     <url-pattern>/workbench/activity/getUserList.do</url-pattern>
     <!--市场活动添加列表-->
     <url-pattern>/workbench/activity/saveActivity.do</url-pattern>
+    <!--进行分页查询-->
+    <url-pattern>/workbench/activity/pageList.do</url-pattern>
+    <!--执行市场活动列表删除操作-->
+    <url-pattern>/workbench/activity/delBySelId.do</url-pattern>
   </servlet-mapping>
 
 

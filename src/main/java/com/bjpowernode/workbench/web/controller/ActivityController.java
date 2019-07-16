@@ -7,6 +7,7 @@ import com.bjpowernode.utils.DateTimeUtil;
 import com.bjpowernode.utils.PrintJson;
 import com.bjpowernode.utils.ServiceFactory;
 import com.bjpowernode.utils.UUIDUtil;
+import com.bjpowernode.vo.PaginationVo;
 import com.bjpowernode.workbench.domain.Activity;
 import com.bjpowernode.workbench.service.ActivityService;
 import com.bjpowernode.workbench.service.impl.ActivityServiceImpl;
@@ -15,8 +16,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Source;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -41,7 +45,61 @@ public class ActivityController extends HttpServlet {
 
             //添加市场活动
             saveActivity(request,response);
+        }else if("/workbench/activity/pageList.do".equals(path)){
+
+            pageList(request,response);
+        }else if("/workbench/activity/delBySelId.do".equals(path)){
+
+            delBySelId(request,response);
         }
+
+    }
+
+    private void delBySelId(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入到市场活动删除模块");
+
+        String[] ids = request.getParameterValues("id");
+        System.out.println(ids);
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        //查询返回回来的数据是boolean 值
+        boolean flag = as.delBySelId(ids);
+
+        PrintJson.printJsonFlag(response, flag);
+    }
+
+    private void pageList(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入到分页查询模块");
+
+        String pageNoStr = request.getParameter("pageNo");
+        String pageSizeStr = request.getParameter("pageSize");
+        String name = request.getParameter("name");
+        String owner = request.getParameter("owner");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+
+        int pageNo = Integer.valueOf(pageNoStr);
+        int pageSize = Integer.valueOf(pageSizeStr);
+
+        //计算出掠过的总条数
+        int skipCount = (pageNo - 1) * pageSize;
+
+        //创建map 对象，将参数封装到map集合之中
+        Map<String,Object> map = new HashMap<>();
+        map.put("skipCount", skipCount);
+        map.put("pageSize", pageSize);
+        map.put("name", name);
+        map.put("owner", owner);
+        map.put("startDate", startDate);
+        map.put("endDate", endDate);
+
+        ActivityService ac = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        PaginationVo<Activity> paginationVo = ac.pageList(map);
+        System.out.println("paginationVo = " + paginationVo);
+        //最后将vo信息返回给前端
+        PrintJson.printJsonObj(response, paginationVo);
 
     }
 
