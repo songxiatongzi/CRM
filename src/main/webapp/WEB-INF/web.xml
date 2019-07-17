@@ -55,6 +55,17 @@
     <url-pattern>/workbench/activity/pageList.do</url-pattern>
     <!--执行市场活动列表删除操作-->
     <url-pattern>/workbench/activity/delBySelId.do</url-pattern>
+
+    <!--执行市场活动，通过点击进入到市场活动详情页，通过id 查单条-->
+    <url-pattern>/workbench/activity/detail.do</url-pattern>
+    <!--通过市场活动id查询市场活动备注信息-->
+    <url-pattern>/workbench/activity/showRemarkListById.do</url-pattern>
+    <!--删除备注信息，通过id(市场活动备注id)删除-->
+    <url-pattern>/workbench/activity/deleteRemarkById.do</url-pattern>
+    <!--为修改备注信息的模态窗口，点击更新按钮，执行更新操作-->
+    <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
+    <!--市场活动列表添加备注信息-->
+    <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
   </servlet-mapping>
 
 

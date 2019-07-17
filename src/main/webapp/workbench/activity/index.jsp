@@ -193,7 +193,106 @@
 
 		});
 
+		//为修改绑定事件
+		$("#editBtn").click(function(){
 
+		var $selectOne = $("input[name=selectOne]:checked");
+
+		if($selectOne.length == 0){
+			alert("请选择您要修改的记录");
+		}else if($selectOne.length > 1){
+			alert("您只能选择一条数据进行修改")
+		}else{
+			alert("update");
+			//对复选框进行取值
+			var id = $selectOne.val();
+
+			//通过这个修改发送AJAx请求
+			$.ajax({
+				/*通过发送id 进行修改*/
+				url:"workbench/activity/getUserListAndActivity.do",
+				data:{
+					id:id
+				},
+				type:"post",
+				dataType:"json",
+				success:function(data){
+					/*
+					* 	success : true/false
+					* 	data
+					* */
+					var html = "<option></option>";
+
+					$.each(data.userList,function(i,n){
+						//遍历用户列表，并将用户列表装载到下拉列表中
+						html += "<option value='"+n.id+"'>"+ n.name +"</option>";
+
+					});
+
+					//为修改下拉列表进行铺值
+					$("#edit-owner").html(html);
+
+					//为修改操作的模态窗口的表单元素铺设数值
+					$("#edit-id").val(data.aList.id);
+					$("#edit-name").val(data.aList.name);
+					$("#edit-owner").val(data.aList.owner);
+					$("#edit-startDate").val(data.aList.startDate);
+					$("#edit-endDate").val(data.aList.endDate);
+					$("#edit-cost").val(data.aList.cost);
+					$("#edit-description").val(data.aList.description);
+
+					//打开修改操作模态窗口
+					$("#editActivityModal").modal("show");
+				}
+
+			});
+		}
+
+		});
+
+		//为更新绑定事件
+		$("#activity-update").click(function(){
+
+			$.ajax({
+
+				url:"workbench/activity/updateActivityList.do",
+				data:{
+					id:$.trim($("#edit-id").val()),
+					owner:$.trim($("#edit-owner").val()),
+					name:$.trim($("#edit-name").val()),
+					startDate:$.trim($("#edit-startDate").val()),
+					endDate:$.trim($("#edit-endDate").val()),
+					cost:$.trim($("#edit-cost").val()),
+					description:$.trim($("#edit-description").val())
+
+				},
+				type:"post",
+				dataType:"json",
+				success:function(data){
+
+					if(data.success){
+						alert("市场活动修改成功");
+						/*
+							$("#activityPage").bs_pagination('getOption', 'currentPage'):
+								维持当前页的页码
+							$("#activityPage").bs_pagination('getOption', 'rowsPerPage')：
+								维持每页展现的记录数
+						 */
+						pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+
+
+						//关闭模态窗口
+						$("#editActivityModal").modal("hide");
+
+					}else{
+						alert("市场活动修改失败");
+					}
+
+				}
+
+			});
+		});
 	});
 
 	function pageList(pageNo,pageSize){
@@ -235,7 +334,9 @@
 					/*在这里设置单选按钮*/
 					//在这里获取所选中id的值
 					html += '<td><input type="checkbox" name="selectOne" value="'+n.id+'"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.jsp\';">'+n.name+'</a></td>';
+					//通过在这里发送一个传统请求，发送一个传统请求
+
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
 					html += '<td>'+n.owner+'</td>';
 					html += '<td>'+n.startDate+'</td>';
 					html += '<td>'+n.endDate+'</td>';
@@ -302,7 +403,12 @@
 				<div class="modal-body">
 				
 					<form class="form-horizontal" role="form" id="activitySaveForm">
-					
+
+						<div>
+							<%--将修改的id值暂时存放在隐藏域中--%>
+							<input type="hidden" id="edit-id"/>
+						</div>
+
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -373,40 +479,48 @@
 						<div class="form-group">
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+								<select class="form-control" id="edit-owner">
+
+									<%--
+										从数据库中获取数
+										user.name
+										进行铺设
+										所有修改的数值全部以edit-* 进行操作
+									--%>
 								</select>
 							</div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
-                            <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                            <div class="col-sm-10" style="width: 300px;">n
+                                <input type="text" class="form-control" id="edit-name" value="发传单">
                             </div>
 						</div>
 
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control" id="edit-startDate" >
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control" id="edit-endDate" >
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-cost" class="col-sm-2 control-label">成本</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-cost" value="5,000">
+								<input type="text" class="form-control" id="edit-cost">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+								<%--注意给文本域铺设值得时候需要注意
+									中间部分不能存在空格
+									<textarea></textarea>
+								--%>
+								<textarea class="form-control" rows="3" id="edit-description"></textarea>
 							</div>
 						</div>
 						
@@ -415,7 +529,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="activity-update">更新</button>
 				</div>
 			</div>
 		</div>

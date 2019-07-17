@@ -9,6 +9,7 @@ import com.bjpowernode.utils.ServiceFactory;
 import com.bjpowernode.utils.UUIDUtil;
 import com.bjpowernode.vo.PaginationVo;
 import com.bjpowernode.workbench.domain.Activity;
+import com.bjpowernode.workbench.domain.ActivityRemark;
 import com.bjpowernode.workbench.service.ActivityService;
 import com.bjpowernode.workbench.service.impl.ActivityServiceImpl;
 
@@ -51,8 +52,123 @@ public class ActivityController extends HttpServlet {
         }else if("/workbench/activity/delBySelId.do".equals(path)){
 
             delBySelId(request,response);
+        }else if("/workbench/activity/detail.do".equals(path)){
+
+            detail(request,response);
+        }else if("/workbench/activity/showRemarkListById.do".equals(path)){
+
+            showRemarkListById(request,response);
+        }else if("/workbench/activity/deleteRemarkById.do".equals(path)){
+
+            deleteRemarkById(request,response);
+        }else if("/workbench/activity/updateRemark.do".equals(path)){
+
+            updateRemark(request,response);
+        }else if("/workbench/activity/saveRemark.do".equals(path)){
+
+            saveRemark(request,response);
         }
 
+    }
+
+    private void saveRemark(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("市场活动页添加备注");
+
+        String id = UUIDUtil.getUUID();
+        String noteContent = request.getParameter("noteContent");
+        String createTime = DateTimeUtil.getSysTime();
+        String createBy = ((User)request.getSession().getAttribute("user")).getName();
+        String editFlag = "0"; //未修改状态
+        String activityId = request.getParameter("activityId");
+
+        ActivityRemark ar = new ActivityRemark();
+        ar.setCreateTime(createTime);
+        ar.setCreateBy(createBy);
+        ar.setActivityId(activityId);
+        ar.setNoteContent(noteContent);
+        ar.setId(id);
+        ar.setEditFlag(editFlag);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        boolean flag = as.saveRemark(ar);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", flag);
+        map.put("ar", ar);
+
+        PrintJson.printJsonObj(response, map);
+
+    }
+
+    private void updateRemark(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("执行修改备注信息");
+
+        String id = request.getParameter("id");
+        String noteContent = request.getParameter("noteContent");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User)request.getSession().getAttribute("user")).getName();
+        String editFlag = "1";
+
+        ActivityRemark ar = new ActivityRemark();
+        ar.setNoteContent(noteContent);
+        ar.setId(id);
+        ar.setEditTime(editTime);
+        ar.setEditFlag(editFlag);
+        ar.setEditBy(editBy);
+
+        ActivityService ac = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        boolean flag = ac.updateRemark(ar);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("success", flag);
+        map.put("ar", ar);
+
+        PrintJson.printJsonObj(response, map);
+    }
+
+    private void deleteRemarkById(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("通过市场备注id 删除备注信息");
+
+        String id = request.getParameter("id");
+
+        //调用市场业务进行删除
+        ActivityService ac = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        //true/false
+        boolean flag = ac.deleteRemarkById(id);
+
+        PrintJson.printJsonFlag(response, flag);
+    }
+
+    private void showRemarkListById(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("通过市场活动id查询市场备注信息页");
+
+        String activityId = request.getParameter("activityId");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        //查询回来是一个集合
+        List<ActivityRemark> arList = as.showRemarkListById(activityId);
+
+        PrintJson.printJsonObj(response, arList);
+
+    }
+
+    private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        System.out.println("进入到展示市场详情页信息列表");
+
+        String id = request.getParameter("id");
+
+        ActivityService ac = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        Activity activity = ac.detail(id);
+        //将查询数据写入请求作用域
+        request.setAttribute("activity", activity);
+        //这里需要转发到市场活动信息详情页
+        request.getRequestDispatcher("/workbench/activity/detail.jsp").forward(request, response);
     }
 
     private void delBySelId(HttpServletRequest request, HttpServletResponse response) {

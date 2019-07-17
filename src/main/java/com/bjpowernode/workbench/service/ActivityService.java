@@ -3,6 +3,7 @@ package com.bjpowernode.workbench.service;
 import com.bjpowernode.settings.domain.User;
 import com.bjpowernode.vo.PaginationVo;
 import com.bjpowernode.workbench.domain.Activity;
+import com.bjpowernode.workbench.domain.ActivityRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -21,4 +22,14 @@ public interface ActivityService {
     PaginationVo<Activity> pageList(Map<String, Object> map);
 
     boolean delBySelId(String[] ids);
+
+    Activity detail(String id);
+
+    List<ActivityRemark> showRemarkListById(String activityId);
+
+    boolean deleteRemarkById(String id);
+
+    boolean updateRemark(ActivityRemark ar);
+
+    boolean saveRemark(ActivityRemark ar);
 }

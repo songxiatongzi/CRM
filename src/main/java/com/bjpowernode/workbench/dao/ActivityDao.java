@@ -20,4 +20,6 @@ public interface ActivityDao {
     List<Activity> selectActivityList(Map<String, Object> map);
 
     int delBySelId(String[] ids);
+
+    Activity detail(String id);
 }

@@ -28,6 +28,56 @@
           #{id}
         </foreach>
     </delete>
+
+    <!--通过activityId 查询备注集合-->
+    <select id="showRemarkListById" resultType="ActivityRemark">
+            select *
+            from tbl_activity_remark
+            where activityId = #{activityId}
+    </select>
+
+    <!--通过备注信息删除备注-->
+    <delete id="deleteRemarkById">
+            delete from tbl_activity_remark
+            where id = #{id}
+    </delete>
+
+    <!--修改备注信息-->
+    <update id="updateRemark" parameterType="ActivityRemark">
+            update tbl_activity_remark
+            set
+
+            noteContent=#{noteContent},
+            editTime=#{editTime},
+            editBy=#{editBy},
+            editFlag=#{editFlag}
+
+            where id = #{id}
+
+    </update>
+
+    <!--添加备注信息-->
+    <insert id="saveRemark" parameterType="ActivityRemark" >
+            insert into tbl_activity_remark(
+
+                id,
+                noteContent,
+                createTime,
+                createBy,
+                editFlag,
+                activityId
+
+            )values (
+
+                #{id},
+                #{noteContent},
+                #{createTime},
+                #{createBy},
+                #{editFlag},
+                #{activityId}
+
+            )
+    </insert>
 </mapper>
 
 

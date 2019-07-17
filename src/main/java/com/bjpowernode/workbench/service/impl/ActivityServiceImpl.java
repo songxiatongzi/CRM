@@ -7,6 +7,7 @@ import com.bjpowernode.vo.PaginationVo;
 import com.bjpowernode.workbench.dao.ActivityDao;
 import com.bjpowernode.workbench.dao.ActivityRemarkDao;
 import com.bjpowernode.workbench.domain.Activity;
+import com.bjpowernode.workbench.domain.ActivityRemark;
 import com.bjpowernode.workbench.service.ActivityService;
 import jdk.management.resource.internal.TotalResourceContext;
 
@@ -81,6 +82,61 @@ public class ActivityServiceImpl implements ActivityService {
         }
 
         return flag ;
+    }
+
+    @Override
+    public Activity detail(String id) {
+        //通过id查询单条
+        Activity activity = activityDao.detail(id);
+
+        return activity;
+    }
+
+    @Override
+    public List<ActivityRemark> showRemarkListById(String activityId) {
+
+        List<ActivityRemark> ar = activityRemarkDao.showRemarkListById(activityId);
+
+        return ar;
+    }
+
+    @Override
+    public boolean deleteRemarkById(String id) {
+
+        //通过备注id删除备注信息
+        boolean flag = activityRemarkDao.deleteRemarkById(id);
+
+        return flag;
+    }
+
+    @Override
+    public boolean updateRemark(ActivityRemark ar) {
+
+        //更新备注操作
+        boolean flag = true;
+
+        int count = activityRemarkDao.updateRemark(ar);
+
+        if(count == 0){
+
+            flag = false;
+        }
+
+        return flag;
+    }
+
+    @Override
+    public boolean saveRemark(ActivityRemark ar) {
+
+        boolean flag = true;
+
+        int count = activityRemarkDao.saveRemark(ar);
+
+        if(count == 0){
+            flag = false;
+        }
+
+        return flag;
     }
 }
 
