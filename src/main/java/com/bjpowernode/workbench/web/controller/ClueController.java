@@ -49,7 +49,25 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/getActivityListByClueId.do".equals(path)){
 
             getActivityListByClueId(request,response);
+        }else if("/workbench/clue/unbund.do".equals(path)){
+
+            unbund(request,response);
         }
+    }
+
+    private void unbund(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("解除市场关联关系");
+
+        //删除第三张表
+        String id = request.getParameter("id");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        boolean flag = cs.unbund(id);
+
+        PrintJson.printJsonFlag(response, flag);
+
     }
 
     private void getActivityListByClueId(HttpServletRequest request, HttpServletResponse response) {

@@ -16,4 +16,6 @@ public interface ClueService {
     boolean createClue(Clue c);
 
     Clue detail(String id);
+
+    boolean unbund(String id);
 }

@@ -49,4 +49,19 @@ public class ClueServiceImpl implements ClueService {
 
         return c;
     }
+
+    @Override
+    public boolean unbund(String id) {
+        //根据关联关系表的id,解除关联关系
+
+        boolean flag = true;
+
+        int count = clueActivityRelationDao.unbund(id);
+
+        if(count == 0){
+            flag = false;
+        }
+
+        return flag;
+    }
 }

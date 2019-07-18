@@ -90,6 +90,8 @@
     <url-pattern>/workbench/clue/detail.do</url-pattern>
     <!--根据线索id查询市场活动列表-->
     <url-pattern>/workbench/clue/getActivityListByClueId.do</url-pattern>
+    <!--解除关联关系列表-->
+    <url-pattern>/workbench/clue/unbund.do</url-pattern>
   </servlet-mapping>
 </web-app>
 

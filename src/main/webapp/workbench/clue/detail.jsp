@@ -93,6 +93,30 @@
 		});
 
 	}
+
+	//为解除管理绑定事件
+	function unbund(id){
+		//id：关联关系表的id
+		$.ajax({
+
+			url:"workbench/clue/unbund.do",
+			data:{
+				id:id
+			},
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				if(data.success){
+					//刷新列表
+					showActiivtyList();
+				}else{
+					alert("解除关联关系失败");
+				}
+
+			}
+		});
+
+	}
 	
 </script>
 
