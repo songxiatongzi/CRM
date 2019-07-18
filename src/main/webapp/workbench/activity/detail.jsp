@@ -195,10 +195,10 @@
 
 				});
 
-				//将拼接好的数据存放到指定的div中
-				//方式一：$("#remark-div").html(html);
-				//方式二：
-				$("#remarkDiv").before(html);
+                //将拼接好的数据存放到指定的div中
+                //方式一：$("#remark-div").html(html);
+                //方式二：
+                $("#remarkDiv").before(html);
 
 			}
 

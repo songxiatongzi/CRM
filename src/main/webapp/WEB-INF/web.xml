@@ -9,7 +9,7 @@
   <!--字符编码过滤器-->
   <filter>
     <filter-name>EncodingFilter</filter-name>
-    <filter-class>com.bjpowernode.web.EncodingFilter</filter-class>
+    <filter-class>com.bjpowernode.web.filter.EncodingFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>EncodingFilter</filter-name>
@@ -19,7 +19,7 @@
   <!--用户登陆过滤器-->
   <filter>
     <filter-name>LoginFilter</filter-name>
-    <filter-class>com.bjpowernode.web.LoginFilter</filter-class>
+    <filter-class>com.bjpowernode.web.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>
@@ -27,6 +27,13 @@
     <url-pattern>*.jsp</url-pattern>
     <url-pattern>*.html</url-pattern>
   </filter-mapping>
+
+  <!--域对象监听器
+      用来监听域对象的创建与消亡
+  -->
+  <listener>
+    <listener-class>com.bjpowernode.web.listener.SysInitListener</listener-class>
+  </listener>
 
   <!--用户登陆控制页面-->
   <servlet>
@@ -68,8 +75,20 @@
     <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
   </servlet-mapping>
 
-
-
+  <!--线索模块-->
+  <servlet>
+    <servlet-name>ClueController</servlet-name>
+    <servlet-class>com.bjpowernode.workbench.web.controller.ClueController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClueController</servlet-name>
+    <!--点击创建，查询userList列表-->
+    <url-pattern>/workbench/clue/getUserList.do</url-pattern>
+    <!--为线索保存按钮绑定事件，进行提交表单的操作-->
+    <url-pattern>/workbench/clue/createClue.do</url-pattern>
+    <!--根据id查询线索列表名称中的详细信息-->
+    <url-pattern>/workbench/clue/detail.do</url-pattern>
+  </servlet-mapping>
 </web-app>
 
 

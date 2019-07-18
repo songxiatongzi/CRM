@@ -16,6 +16,9 @@
 
 		$(function () {
 
+			if(window.top != window){
+				window.top.location = window.location;
+			}
 
 			//获取用户名焦点事件
 			$("#loginAct").focus();
