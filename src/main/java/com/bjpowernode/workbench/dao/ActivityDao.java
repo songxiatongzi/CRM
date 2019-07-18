@@ -22,4 +22,6 @@ public interface ActivityDao {
     int delBySelId(String[] ids);
 
     Activity detail(String id);
+
+    List<Activity> getActivityListByClueId(String clueId);
 }

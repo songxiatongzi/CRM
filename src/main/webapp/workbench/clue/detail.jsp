@@ -57,25 +57,42 @@
 
 		//页面加载完毕后，展现市场活动列表
 
-		//showActiivtyList();
+		showActiivtyList();
 
 	});
 
-	// function showActiivtyList(){
-	// 	//展现市场活动列表,通过线索的id，
-	//
-	// 	$.ajax({
-	//
-	// 		url:"",
-	// 		data:{},
-	// 		type:"",
-	// 		dataType:"",
-	// 		success:function(data){
-	//
-	// 		}
-	// 	});
-	//
-	// }
+	function showActiivtyList(){
+		//展现市场活动列表,通过线索的id，
+
+		$.ajax({
+
+			url:"workbench/clue/getActivityListByClueId.do",
+			data:{
+				clueId:"${c.id}"
+			},
+			type:"get",
+			dataType:"json",
+			success:function(data){
+
+				//dataList
+				var html = "";
+				$.each(data,function(i,n){
+
+					html += '<tr>';
+					html += '<td>'+n.name+'</td>';
+					html += '<td>'+n.startDate+'</td>';
+					html += '<td>'+n.endDate+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td><a href="javascript:void(0);"  style="text-decoration: none;" onclick="unbund(\''+n.id+'\')"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>';
+					html += '</tr>';
+
+				});
+
+				$("#activityList").html(html);
+			}
+		});
+
+	}
 	
 </script>
 
@@ -459,21 +476,15 @@
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+					<tbody id="activityList">
+
+						<%--<tr>--%>
+							<%--<td>发传单</td>--%>
+							<%--<td>2020-10-10</td>--%>
+							<%--<td>2020-10-20</td>--%>
+							<%--<td>zhangsan</td>--%>
+							<%--<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>--%>
+						<%--</tr>--%>
 					</tbody>
 				</table>
 			</div>

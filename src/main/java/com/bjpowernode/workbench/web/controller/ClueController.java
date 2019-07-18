@@ -7,6 +7,7 @@ import com.bjpowernode.utils.DateTimeUtil;
 import com.bjpowernode.utils.PrintJson;
 import com.bjpowernode.utils.ServiceFactory;
 import com.bjpowernode.utils.UUIDUtil;
+import com.bjpowernode.workbench.domain.Activity;
 import com.bjpowernode.workbench.domain.Clue;
 import com.bjpowernode.workbench.service.ActivityService;
 import com.bjpowernode.workbench.service.ClueService;
@@ -45,7 +46,23 @@ public class ClueController extends HttpServlet {
         }else if ("/workbench/clue/detail.do".equals(path)){
 
             detail(request,response);
+        }else if("/workbench/clue/getActivityListByClueId.do".equals(path)){
+
+            getActivityListByClueId(request,response);
         }
+    }
+
+    private void getActivityListByClueId(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("根据线索id查询市场活动列表");
+
+        String clueId = request.getParameter("clueId");
+
+        ActivityService ac = (ActivityService) ServiceFactory.getService( new ActivityServiceImpl());
+
+        List<Activity> aList = ac.getActivityListByClueId(clueId);
+
+        PrintJson.printJsonObj(response, aList);
     }
 
     private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
