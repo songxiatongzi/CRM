@@ -38,6 +38,9 @@
 			pickerPosition: "top-left"
 		});
 
+		//页面加载时，自动到数据库中查询所有的线索信息，并将线索信息展现到线索列表中
+		showClueList();
+
 		//给创建按钮添加事件
 		$("#select-saveBtn").click(function(){
 			//到数据库中查询用户姓名
@@ -59,7 +62,7 @@
 
 					$("#create-owner").html(html);
 
-					var id = "${userList.id}";
+					var id = "${user.id}";
 					$("#create-owner").val(id);
 
 					//关闭模态窗口
@@ -117,6 +120,20 @@
 		});
 		
 	});
+
+	function showClueList(){
+		alert("进入到展现线索列表方法中执行");
+		$.ajax({
+
+			url:"",
+			type:"",
+			dataType:"",
+			success:function(data){
+				//展现线索列表
+
+			}
+		});
+	}
 	
 </script>
 </head>

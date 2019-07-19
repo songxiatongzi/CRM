@@ -12,9 +12,12 @@ import java.util.List;
  * 功能描述：
  */
 public interface UserService {
+    //用户业务层
+
     User login(String loginAct, String loginPwd, String ip) throws LoginException;
 
     List<User> getUserList();
 
-    //用户业务层
+
+
 }

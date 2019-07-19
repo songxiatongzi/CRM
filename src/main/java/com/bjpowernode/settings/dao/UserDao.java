@@ -18,4 +18,6 @@ public interface UserDao {
 
     List<User> getUserList();
 
+    List<String> getCustomerName();
+
 }

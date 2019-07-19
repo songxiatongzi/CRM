@@ -143,4 +143,28 @@
 
             where car.clueId=#{clueId}
     </select>
+
+    <select id="getActivityListByNameNoByCLueId" parameterType="map" resultType="Activity">
+            select
+
+            a.id
+            a.name
+            a.startDate
+            a.endDate
+            u.name as owner
+
+            from tbl_activity a
+            join tbL_user u
+
+            on u.id = a.owner
+            where a.name
+            like '%' #{name} '%'
+            and a.id not in(
+
+              select activityId
+              from tbl_clue_activity_relation
+              where clueId = #{clueId}
+            )
+
+    </select>
 </mapper>

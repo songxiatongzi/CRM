@@ -1,5 +1,14 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 	request.getServerPort() + request.getContextPath() + "/";
+
+	//从application域对象中获取值，并通过map得到set集合
+	Map<String,String> pMap = (Map<String, String>) application.getAttribute("pMap");
+
+	Set<String> set =  pMap.keySet();
+
 %>
 <%--设置字符集
 	所有html修改成为jsp 的网页【将相对路径设置为绝对路径】
@@ -19,11 +28,84 @@
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
+	<script type="text/javascript">
 
+		//将pMap转换为js 中的json 字符串
+		var json = {
+
+			<%
+            for(String stage : set){
+
+            	String possibility = pMap.get(stage);
+            	%>
+			//注意键的值必须要在双引号之间，否则不好使
+			"<%=stage%>":<%=possibility%>,
+
+			<%
+            }
+        %>
+
+		}
+
+
+		$(function(){
+			//添加时间控件
+
+			$(".time-expectedDate").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+
+			$(".time-nextContactTime").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "top-left"
+			});
+
+			//设置自动补全
+			//需要引入插件
+			$("#create-accountName").typeahead({
+				source: function (query, process) {
+					//name 表示要模糊查询的值
+					$.get(
+							"workbench/transaction/getCustomerName.do",
+							{ "name" : query },
+							function (data) {
+								//alert(data);
+								process(data);
+							},
+							"json"
+					);
+				},
+				delay: 500
+			});
+
+			//需求:根据所选需求，将需求所对应的值填写在可能性的文本框中
+			$("#create-stage").change(function(){
+
+				var stage = $("#create-stage").val();
+
+				//拿到stage的值，将值
+				var possibility = json[stage];
+				//将遍历取出来的键值存放到输入框中;
+				$("#create-possibility").val(possibility);
+
+			});
+
+		});
+	</script>
 </head>
 <body>
 
-	<!-- 查找市场活动 -->	
+	<!-- 查找市场活动模态窗口 -->
 	<div class="modal fade" id="findMarketActivity" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
@@ -74,7 +156,7 @@
 		</div>
 	</div>
 
-	<!-- 查找联系人 -->	
+	<!-- 查找联系人模态窗口 -->
 	<div class="modal fade" id="findContacts" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
@@ -122,7 +204,7 @@
 		</div>
 	</div>
 	
-	
+	<%--主页右上角修改键--%>
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
@@ -131,14 +213,17 @@
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
+
+	<%--创建交易表单--%>
 	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionOwner">
-				  <option>zhangsan</option>
-				  <option>lisi</option>
-				  <option>wangwu</option>
+				  	<option value="0">--请选择--</option>
+					<c:forEach items="${userList}" var="u">
+						<option value="${u.id}" ${user.id eq u.id ? "selected" : ""}>${u.name}</option>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
@@ -154,7 +239,9 @@
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<%--time-expectedDate :预计成交日期
+				--%>
+				<input type="text" class="form-control time-expectedDate" id="create-expectedClosingDate" readonly>
 			</div>
 		</div>
 		
@@ -165,17 +252,12 @@
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
-			  	<option></option>
-			  	<option>资质审查</option>
-			  	<option>需求分析</option>
-			  	<option>价值建议</option>
-			  	<option>确定决策者</option>
-			  	<option>提案/报价</option>
-			  	<option>谈判/复审</option>
-			  	<option>成交</option>
-			  	<option>丢失的线索</option>
-			  	<option>因竞争丢失关闭</option>
+			  <select class="form-control" id="create-stage">
+			  	<option value="0">--请选择--</option>
+
+			  	<c:forEach items="${applicationScope.stage}" var="s">
+					<option value="${s.value}">${s.text}</option>
+				</c:forEach>
 			  </select>
 			</div>
 		</div>
@@ -184,48 +266,45 @@
 			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionType">
-				  <option></option>
-				  <option>已有业务</option>
-				  <option>新业务</option>
+				  <option value="0">--请选择--</option>
+
+				  <c:forEach var="t" items="${applicationScope.transactionType}">
+					  <option value="${t.value}">${t.text}</option>
+				  </c:forEach>
 				</select>
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility">
+				<input type="text" class="form-control" id="create-possibility" readonly>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
-				  <option></option>
-				  <option>广告</option>
-				  <option>推销电话</option>
-				  <option>员工介绍</option>
-				  <option>外部介绍</option>
-				  <option>在线商场</option>
-				  <option>合作伙伴</option>
-				  <option>公开媒介</option>
-				  <option>销售邮件</option>
-				  <option>合作伙伴研讨会</option>
-				  <option>内部研讨会</option>
-				  <option>交易会</option>
-				  <option>web下载</option>
-				  <option>web调研</option>
-				  <option>聊天</option>
+				<select class="form-control" id="create-source">
+				  <option value="0">--请选择--</option>
+				  <c:forEach items="${source}" var="s">
+					  <option value="${s.value}">${s.text}</option>
+				  </c:forEach>
 				</select>
 			</div>
 			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc">
+
+				<%--暂时将数据写死--%>
+				<input type="text" class="form-control" id="create-activitySrc" value="飞鸽传书" readonly>
+				<input type="hidden" name="activityId" value="653b6d2ad3ed4d93b12c0c0784388f0e">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName">
+
+				<%--暂时设置为只读--%>
+				<input type="text" class="form-control" id="create-contactsName" value="郭靖" readonly>
+				<input type="hidden" name="contactsId" value="43ba3c3905b14a50959fde6342ecfb6d">
 			</div>
 		</div>
 		
@@ -246,7 +325,9 @@
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<%--time-nextContactTime :下次联系时间
+				--%>
+				<input type="text" class="form-control time-nextContactTime" id="create-nextContactTime" readonly>
 			</div>
 		</div>
 		

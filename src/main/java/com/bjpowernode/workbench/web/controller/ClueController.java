@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Auther: 董怀宾_bjpowernode
@@ -52,7 +53,28 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/unbund.do".equals(path)){
 
             unbund(request,response);
+        }else if("/workbench/clue/getActivityListByNameNoByCLueId.do".equals(path)){
+
+            getActivityListByNameNoByCLueId(request, response);
         }
+    }
+
+    private void getActivityListByNameNoByCLueId(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("管理市场活动模态窗口进行查询");
+
+        String name = request.getParameter("name");
+        String clueId = request.getParameter("clueId");
+
+        Map<String,String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("clueId", clueId);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        List<Activity> aList = as.getActivityListByNameNoByCLueId(map);
+
+        PrintJson.printJsonObj(response, aList);
+
     }
 
     private void unbund(HttpServletRequest request, HttpServletResponse response) {

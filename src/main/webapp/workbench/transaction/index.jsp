@@ -23,8 +23,7 @@
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+
 		
 	});
 	
@@ -32,8 +31,7 @@
 </head>
 <body>
 
-	
-	
+	<%--交易列表主页面--%>
 	<div>
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">
@@ -41,7 +39,8 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<%--查询下拉框--%>
 	<div style="position: relative; top: -20px; left: 0px; width: 100%; height: 100%;">
 	
 		<div style="width: 100%; position: absolute;top: 5px; left: 10px;">
@@ -135,14 +134,20 @@
 				  
 				</form>
 			</div>
+
+			<%--创建、删除、修改、按钮--%>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" onclick="window.location.href='save.jsp';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.jsp';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+					<%--为添加按钮绑定事件  id="addBtn"
+							添加按钮---->向后台发送请求，将用户信息查询出来放入到下拉框中
+						修改绑定事件 id="updateBtn"
+					--%>
+				  <button type="button" class="btn btn-primary" onclick="window.location.href='workbench/transaction/getUserList.do';" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建123</button>
+				  <button type="button" class="btn btn-default" onclick="window.location.href='workbench/transaction/edit.jsp';" id="updateBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
-				
-				
+
+			<%--展示数据--%>
 			</div>
 			<div style="position: relative;top: 10px;">
 				<table class="table table-hover">
@@ -182,7 +187,7 @@
 					</tbody>
 				</table>
 			</div>
-			
+			<%--页码--%>
 			<div style="height: 50px; position: relative;top: 20px;">
 				<div>
 					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>

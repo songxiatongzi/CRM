@@ -196,57 +196,57 @@
 		//为修改绑定事件
 		$("#editBtn").click(function(){
 
-		var $selectOne = $("input[name=selectOne]:checked");
+			var $selectOne = $("input[name=selectOne]:checked");
 
-		if($selectOne.length == 0){
-			alert("请选择您要修改的记录");
-		}else if($selectOne.length > 1){
-			alert("您只能选择一条数据进行修改")
-		}else{
-			alert("update");
-			//对复选框进行取值
-			var id = $selectOne.val();
+			if($selectOne.length == 0){
+				alert("请选择您要修改的记录");
+			}else if($selectOne.length > 1){
+				alert("您只能选择一条数据进行修改")
+			}else{
+				alert("update");
+				//对复选框进行取值
+				var id = $selectOne.val();
 
-			//通过这个修改发送AJAx请求
-			$.ajax({
-				/*通过发送id 进行修改*/
-				url:"workbench/activity/getUserListAndActivity.do",
-				data:{
-					id:id
-				},
-				type:"post",
-				dataType:"json",
-				success:function(data){
-					/*
-					* 	success : true/false
-					* 	data
-					* */
-					var html = "<option></option>";
+				//通过这个修改发送AJAx请求
+				$.ajax({
+					/*通过发送id 进行修改*/
+					url:"workbench/activity/getUserListAndActivity.do",
+					data:{
+						id:id
+					},
+					type:"post",
+					dataType:"json",
+					success:function(data){
+						/*
+						* 	success : true/false
+						* 	data
+						* */
+						var html = "<option></option>";
 
-					$.each(data.userList,function(i,n){
-						//遍历用户列表，并将用户列表装载到下拉列表中
-						html += "<option value='"+n.id+"'>"+ n.name +"</option>";
+						$.each(data.userList,function(i,n){
+							//遍历用户列表，并将用户列表装载到下拉列表中
+							html += "<option value='"+n.id+"'>"+ n.name +"</option>";
 
-					});
+						});
 
-					//为修改下拉列表进行铺值
-					$("#edit-owner").html(html);
+						//为修改下拉列表进行铺值
+						$("#edit-owner").html(html);
 
-					//为修改操作的模态窗口的表单元素铺设数值
-					$("#edit-id").val(data.aList.id);
-					$("#edit-name").val(data.aList.name);
-					$("#edit-owner").val(data.aList.owner);
-					$("#edit-startDate").val(data.aList.startDate);
-					$("#edit-endDate").val(data.aList.endDate);
-					$("#edit-cost").val(data.aList.cost);
-					$("#edit-description").val(data.aList.description);
+						//为修改操作的模态窗口的表单元素铺设数值
+						$("#edit-id").val(data.aList.id);
+						$("#edit-name").val(data.aList.name);
+						$("#edit-owner").val(data.aList.owner);
+						$("#edit-startDate").val(data.aList.startDate);
+						$("#edit-endDate").val(data.aList.endDate);
+						$("#edit-cost").val(data.aList.cost);
+						$("#edit-description").val(data.aList.description);
 
-					//打开修改操作模态窗口
-					$("#editActivityModal").modal("show");
-				}
+						//打开修改操作模态窗口
+						$("#editActivityModal").modal("show");
+					}
 
-			});
-		}
+				});
+			}
 
 		});
 
