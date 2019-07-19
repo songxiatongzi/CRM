@@ -117,6 +117,7 @@
 
 			});
 
+			showClueList();
 		});
 		
 	});
@@ -125,11 +126,30 @@
 		alert("进入到展现线索列表方法中执行");
 		$.ajax({
 
-			url:"",
-			type:"",
-			dataType:"",
+			url:"workbench/clue/getClueList.do",
+			type:"get",
+			dataType:"json",
 			success:function(data){
 				//展现线索列表
+				//clueList: {clue1:()
+				// 			clue2 :()
+				// 	  		...		}
+				var html = "";
+				$.each(data,function(i,n){
+					//对返回来的集合进行遍历
+					html += '<tr class="active">';
+					html += '<td><input type="checkbox" /></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?id='+n.id+'\';">'+n.company+'</a></td>';
+					html += '<td>'+n.fullname+'</td>';
+					html += '<td>'+n.phone+'</td>';
+					html += '<td>'+n.mphone+'</td>';
+					html += '<td>'+n.source+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.state+'</td>';
+					html += '</tr>';
+				});
+				//将返回来的值装载到body体中;
+				$("#show-clue").html(html);
 
 			}
 		});
@@ -555,16 +575,16 @@
 					<tbody id="show-clue">
 
 					<%--这里发送是传统请求--%>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.do?id=7956006e824f45d099f6bb74f703be1b';">马钰先生</a></td>
-                            <td>全真教</td>
-                            <td>010-84846003</td>
-                            <td>12345678901</td>
-                            <td>广告</td>
-                            <td>zhangsan</td>
-                            <td>已联系</td>
-                        </tr>
+                        <%--<tr class="active">--%>
+                            <%--<td><input type="checkbox" /></td>--%>
+                            <%--<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/clue/detail.do?id=7956006e824f45d099f6bb74f703be1b';">马钰先生</a></td>--%>
+                            <%--<td>全真教</td>--%>
+                            <%--<td>010-84846003</td>--%>
+                            <%--<td>12345678901</td>--%>
+                            <%--<td>广告</td>--%>
+                            <%--<td>zhangsan</td>--%>
+                            <%--<td>已联系</td>--%>
+                        <%--</tr>--%>
 					</tbody>
 				</table>
 			</div>

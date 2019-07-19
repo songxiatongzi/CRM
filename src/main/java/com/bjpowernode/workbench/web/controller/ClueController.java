@@ -13,6 +13,7 @@ import com.bjpowernode.workbench.service.ActivityService;
 import com.bjpowernode.workbench.service.ClueService;
 import com.bjpowernode.workbench.service.impl.ActivityServiceImpl;
 import com.bjpowernode.workbench.service.impl.ClueServiceImpl;
+import com.bjpowernode.workbench.service.impl.CustomerServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,7 +57,21 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/getActivityListByNameNoByCLueId.do".equals(path)){
 
             getActivityListByNameNoByCLueId(request, response);
+        }else if("/workbench/clue/getClueList.do".equals(path)){
+
+            getClueList(request,response);
         }
+    }
+
+    private void getClueList(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入到查询线索列表中");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        List<Clue> clueList = cs.getClueList();
+
+        PrintJson.printJsonObj(response, clueList);
     }
 
     private void getActivityListByNameNoByCLueId(HttpServletRequest request, HttpServletResponse response) {

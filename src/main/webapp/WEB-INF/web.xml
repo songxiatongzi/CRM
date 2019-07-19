@@ -94,6 +94,8 @@
     <url-pattern>/workbench/clue/unbund.do</url-pattern>
     <!--关联市场活动模态窗口-->
     <url-pattern>/workbench/clue/getActivityListByNameNoByCLueId.do</url-pattern>
+    <!--[线索列表中]查询所有的线索-->
+    <url-pattern>/workbench/clue/getClueList.do</url-pattern>
   </servlet-mapping>
 
   <!--交易模块-->

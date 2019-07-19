@@ -64,4 +64,13 @@ public class ClueServiceImpl implements ClueService {
 
         return flag;
     }
+
+    @Override
+    public List<Clue> getClueList() {
+
+        //查询所有的线索列表
+        List<Clue> clueList = clueDao.getClueList();
+
+        return clueList;
+    }
 }
