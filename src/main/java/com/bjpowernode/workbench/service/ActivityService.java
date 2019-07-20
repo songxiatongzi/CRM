@@ -37,4 +37,5 @@ public interface ActivityService {
 
     List<Activity> getActivityListByNameNoByCLueId(Map<String, String> map);
 
+    List<Activity> getActivityListByName(String activityName);
 }

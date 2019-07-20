@@ -447,7 +447,14 @@
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
 
-            <%--通过点击,会将5个值传到转换页面--%>
+            <%--通过点击,会将5个值传到转换页面
+                不通过后台将参数传递线索转化页面
+                id=${c.id}&   ------->市场活动的id
+                fullname=${c.fullname}&  姓名
+                appellation=${c.appellation}& 称呼
+                company=${c.company}& 公司
+                owner=${c.owner} 所有者 user.name [谁登陆就将user设置为谁]
+            --%>
 			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp?id=${c.id}&fullname=${c.fullname}&appellation=${c.appellation}&company=${c.company}&owner=${c.owner}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>

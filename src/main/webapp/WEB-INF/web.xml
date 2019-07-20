@@ -98,6 +98,10 @@
     <url-pattern>/workbench/clue/getClueList.do</url-pattern>
     <!--[关联市场活动][选中按钮，点击关联]-->
     <url-pattern>/workbench/clue/bund.do</url-pattern>
+    <!--[转换线索][为客户创建交易][市场活动源][点击搜索按钮]-->
+    <url-pattern>/workbench/clue/getActivityListByName.do</url-pattern>
+    <!--[转换线索][点击线索转换]-->
+    <url-pattern>/workbench/clue/convent.do</url-pattern>
   </servlet-mapping>
 
   <!--交易模块-->

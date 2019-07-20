@@ -14,6 +14,7 @@ import com.bjpowernode.workbench.service.ClueService;
 import com.bjpowernode.workbench.service.impl.ActivityServiceImpl;
 import com.bjpowernode.workbench.service.impl.ClueServiceImpl;
 import com.bjpowernode.workbench.service.impl.CustomerServiceImpl;
+import com.sun.corba.se.impl.orb.DataCollectorBase;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,7 +64,33 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/bund.do".equals(path)){
 
             bund(request,response);
+        }else if("/workbench/clue/getActivityListByName.do".equals(path)){
+
+            getActivityListByName(request,response);
+        }else if("/workbench/clue/convent.do".equals(path)){
+
+            convent(request,response);
         }
+    }
+
+    private void convent(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("[转换线索][点击线索转换]");
+
+
+    }
+
+    private void getActivityListByName(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("[转换线索][为客户创建交易][市场活动源][点击搜索按钮]");
+
+        String activityName = request.getParameter("activityName");
+
+        ActivityService ac = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        List<Activity> activityList = ac.getActivityListByName(activityName);
+
+        PrintJson.printJsonObj(response, activityList);
     }
 
     private void bund(HttpServletRequest request, HttpServletResponse response) {
