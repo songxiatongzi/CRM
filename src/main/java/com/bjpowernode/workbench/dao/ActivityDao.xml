@@ -147,10 +147,10 @@
     <select id="getActivityListByNameNoByCLueId" parameterType="map" resultType="Activity">
             select
 
-            a.id
-            a.name
-            a.startDate
-            a.endDate
+            a.id,
+            a.name,
+            a.startDate,
+            a.endDate,
             u.name as owner
 
             from tbl_activity a

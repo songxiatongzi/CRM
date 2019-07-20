@@ -55,17 +55,23 @@
 			$(this).children("span").css("color","#E6E6E6");
 		});
 
-		//页面加载完毕后，展现市场活动列表
+		//页面加载完毕后，自动发送一个Ajax请求，展现[关联]市场活动列表
 
 		showActiivtyList();
 
 		//点击关联市场活动，为搜索按钮绑定事件
         $("#activityNameBtn").keydown(function(event){
 
-            if(event == 13){
+            //设置回车键进行查询
+            if(event.keyCode == 13){
                 //点击回车键
+                alert("测试回车键");
                 //通过名程进行模糊查询
                 //不通过线索进行查询
+                /*
+                    name:模糊查询的name属性
+                    clueId:线索的id
+                 */
                 $.ajax({
 
                     url:"workbench/clue/getActivityListByNameNoByCLueId.do",
@@ -82,7 +88,7 @@
                         $.each(data,function(i,n){
 
                            html += '<tr>';
-                           html += '<td><input type="checkbox"/></td>';
+                           html += '<td><input type="checkbox" value="'+n.id+'"/></td>';
                            html += '<td>'+n.name+'</td>';
                            html += '<td>'+n.startDate+'</td>';
                            html += '<td>'+n.endDate+'</td>';
@@ -108,11 +114,12 @@
 
     function showActiivtyList(){
         //展现市场活动列表,通过线索的id，
-
+        //c:从作用域中取值
         $.ajax({
 
             url:"workbench/clue/getActivityListByClueId.do",
             data:{
+                //id:clueId
                 clueId:"${c.id}"
             },
             type:"get",
@@ -139,7 +146,7 @@
 
     }
 
-    //为解除管理绑定事件
+    //为解除管理绑定事件[点击马钰]---->进入马钰信息详情页，
     function unbund(id){
         //id：关联关系表的id
         $.ajax({
