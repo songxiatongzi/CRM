@@ -21,4 +21,5 @@ public interface ClueService {
 
     List<Clue> getClueList();
 
+    boolean bund(String clueId, String[] activityIds);
 }

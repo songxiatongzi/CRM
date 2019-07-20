@@ -88,7 +88,7 @@
                         $.each(data,function(i,n){
 
                            html += '<tr>';
-                           html += '<td><input type="checkbox" value="'+n.id+'"/></td>';
+                           html += '<td><input type="checkbox" name="selectOne" value="'+n.id+'"/></td>';
                            html += '<td>'+n.name+'</td>';
                            html += '<td>'+n.startDate+'</td>';
                            html += '<td>'+n.endDate+'</td>';
@@ -109,6 +109,54 @@
 
         });
 
+        //为点击关联按钮，绑定事件
+        //在点击关联按钮时，先搞定单选与全选
+        $("#bundBtn").click(function(){
+
+            //先获取点击复选框按钮的数值
+            var $selectOne = $(":checkbox[name=selectOne]:checked");
+
+            if($selectOne.length == 0){
+                alert("请选择需要关联的市场活动");
+            }else{
+                //clueId:当前页中拿到的clueId;
+                //获取所有的参数值
+                var param = "clueId=${c.id}&";
+
+                for(var i=0;i<$selectOne.length;i++){
+                    param += "activtyId="+$($selectOne[i]).val();
+
+                    if(i< $selectOne.length - 1){
+
+                        param += "&";
+
+                    }
+                }
+                //alert(param);
+            }
+
+            $.ajax({
+
+                url:"workbench/clue/bund.do",
+                data:param,
+                type:"post",
+                dataType:"json",
+                success:function(data){
+
+                    if(data.success){
+                        //将输入框中内容设置为空串
+                        $("#activityNameBtn").val("");
+                        //将所选中复选框清空
+                        $(":checkbox:checked").parent().parent().remove();
+                        //刷新关联市场活动列表
+                        showActiivtyList();
+                        //关闭模态窗口
+                        $("#bundModal").modal("hide");
+                    }
+                }
+            })
+
+        });
 
     });
 
@@ -218,8 +266,14 @@
 					</table>
 				</div>
 				<div class="modal-footer">
+
+                    <%--
+                        为点击关联按钮绑定事件
+                        bundBtn:关联
+
+                    --%>
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundBtn">关联</button>
 				</div>
 			</div>
 		</div>

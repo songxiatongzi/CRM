@@ -3,10 +3,12 @@ package com.bjpowernode.workbench.service.impl;
 import com.bjpowernode.settings.dao.UserDao;
 import com.bjpowernode.settings.domain.User;
 import com.bjpowernode.utils.SqlSessionUtil;
+import com.bjpowernode.utils.UUIDUtil;
 import com.bjpowernode.workbench.dao.ClueActivityRelationDao;
 import com.bjpowernode.workbench.dao.ClueDao;
 import com.bjpowernode.workbench.dao.ClueRemarkDao;
 import com.bjpowernode.workbench.domain.Clue;
+import com.bjpowernode.workbench.domain.ClueActivityRelation;
 import com.bjpowernode.workbench.service.ClueService;
 
 import java.util.List;
@@ -72,5 +74,29 @@ public class ClueServiceImpl implements ClueService {
         List<Clue> clueList = clueDao.getClueList();
 
         return clueList;
+    }
+
+    @Override
+    public boolean bund(String clueId, String[] activityIds) {
+
+        boolean flag = true;
+
+        //在业务层，遍历数组，并创建对象
+        for(String activityId : activityIds){
+
+            ClueActivityRelation clueActivityRelation = new ClueActivityRelation();
+            clueActivityRelation.setId(UUIDUtil.getUUID());
+            clueActivityRelation.setActivityId(activityId);
+            clueActivityRelation.setClueId(clueId);
+
+            int count = clueActivityRelationDao.bund(clueActivityRelation);
+
+            if(count == 0){
+                flag = false;
+            }
+
+        }
+
+        return flag;
     }
 }

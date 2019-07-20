@@ -60,7 +60,24 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/getClueList.do".equals(path)){
 
             getClueList(request,response);
+        }else if("/workbench/clue/bund.do".equals(path)){
+
+            bund(request,response);
         }
+    }
+
+    private void bund(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("[关联市场活动模态窗口][选中，点击关联]");
+
+        String clueId = request.getParameter("clueId");
+        String[] activityIds = request.getParameterValues("activtyId");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        boolean flag = cs.bund(clueId,activityIds);
+
+        PrintJson.printJsonFlag(response, flag);
     }
 
     private void getClueList(HttpServletRequest request, HttpServletResponse response) {

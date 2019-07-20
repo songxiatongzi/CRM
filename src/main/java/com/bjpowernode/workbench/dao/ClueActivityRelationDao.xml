@@ -11,6 +11,23 @@
          where id = #{id}
 
     </delete>
+
+    <!--添加关联[关联市场活动和线索][返回值是一个对象]-->
+    <insert id="bund" parameterType="ClueActivityRelation">
+        insert into tbl_clue_activity_relation(
+
+          id,
+          clueId,
+          activityId
+
+        )values(
+
+          #{id},
+          #{clueId},
+          #{activityId}
+
+        )
+    </insert>
 </mapper>
 
 
