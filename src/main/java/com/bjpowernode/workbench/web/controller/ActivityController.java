@@ -66,8 +66,61 @@ public class ActivityController extends HttpServlet {
         }else if("/workbench/activity/saveRemark.do".equals(path)){
 
             saveRemark(request,response);
+        }else if("/workbench/activity/getUserListAndActivity.do".equals(path)){
+
+            getUserListAndActivity(request,response);
+        }else if("/workbench/activity/updateActivityList.do".equals(path)){
+
+            updateActivityList(request,response);
         }
 
+    }
+
+    private void updateActivityList(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("[修改市场活动][支持操作按钮]");
+
+        //得到需要修改的数据
+        String id = request.getParameter("id");
+        String owner = request.getParameter("owner");
+        String name = request.getParameter("name");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String cost = request.getParameter("cost");
+        String description = request.getParameter("description");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User)request.getSession().getAttribute("user")).getName();
+
+        //将参数封装到对象中
+        Activity activity = new Activity();
+        activity.setEditTime(editTime);
+        activity.setEditBy(editBy);
+        activity.setStartDate(startDate);
+        activity.setOwner(owner);
+        activity.setName(name);
+        activity.setId(id);
+        activity.setEndDate(endDate);
+        activity.setDescription(description);
+        activity.setCost(cost);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        boolean flag = as.updateActivityList(activity);
+
+        PrintJson.printJsonFlag(response, flag);
+    }
+
+    private void getUserListAndActivity(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("[市场活动列表][选中需要修改的数据][点击修改操作按钮]执行修改操作");
+
+        String id = request.getParameter("id");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        Map<String,Object> map = as.getUserListAndActivity(id);
+
+        PrintJson.printJsonObj(response, map);
     }
 
     private void saveRemark(HttpServletRequest request, HttpServletResponse response) {

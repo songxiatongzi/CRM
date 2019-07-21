@@ -1,6 +1,7 @@
 package com.bjpowernode.workbench.service.impl;
 
 
+import com.bjpowernode.settings.dao.UserDao;
 import com.bjpowernode.settings.domain.User;
 import com.bjpowernode.utils.SqlSessionUtil;
 import com.bjpowernode.vo.PaginationVo;
@@ -11,6 +12,7 @@ import com.bjpowernode.workbench.domain.ActivityRemark;
 import com.bjpowernode.workbench.service.ActivityService;
 import jdk.management.resource.internal.TotalResourceContext;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     private ActivityDao activityDao = SqlSessionUtil.getSqlSession().getMapper(ActivityDao.class);
     private ActivityRemarkDao activityRemarkDao = SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
+    private UserDao userDao = SqlSessionUtil.getSqlSession().getMapper(UserDao.class);
 
     @Override
     public boolean saveActivity(Activity activity) {
@@ -160,6 +163,35 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> activityList = activityDao.getActivityListByName(activityName);
 
         return activityList;
+    }
+
+    @Override
+    public Map<String, Object> getUserListAndActivity(String id) {
+
+        //取得用户列表
+        List<User> userList = userDao.getUserList();
+
+        //根据市场活动id 获取市场活动集合
+        Activity a = activityDao.getById(id);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("userList", userList);
+        map.put("aList", a);
+
+        return map;
+    }
+
+    @Override
+    public boolean updateActivityList(Activity activity) {
+
+        boolean flag = true;
+
+        int count = activityDao.updateActivityList(activity);
+
+        if(count == 0){
+            flag = false;
+        }
+        return flag;
     }
 }
 

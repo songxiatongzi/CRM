@@ -5,3 +5,4 @@ version 1.1.3 完成关联市场活动，并设置了清理
                 //将所选中复选框清空
                 $(":checkbox:checked").parent().parent().remove();
 version 1.1.4 完成线索前端的设置
+version 1.1.5 市场活动完成修改操作

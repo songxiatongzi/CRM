@@ -193,7 +193,7 @@
 
 		});
 
-		//为修改绑定事件
+		//为修改绑定事件[需要做]
 		$("#editBtn").click(function(){
 
 			var $selectOne = $("input[name=selectOne]:checked");
@@ -206,7 +206,7 @@
 				alert("update");
 				//对复选框进行取值
 				var id = $selectOne.val();
-
+				alert(id);
 				//通过这个修改发送AJAx请求
 				$.ajax({
 					/*通过发送id 进行修改*/
@@ -223,6 +223,7 @@
 						* */
 						var html = "<option></option>";
 
+						//从后台查询所有的用户列表【"userList":userList,"aLiost":aList】
 						$.each(data.userList,function(i,n){
 							//遍历用户列表，并将用户列表装载到下拉列表中
 							html += "<option value='"+n.id+"'>"+ n.name +"</option>";
@@ -250,9 +251,12 @@
 
 		});
 
-		//为更新绑定事件
+		//为更新绑定事件[需要做]
 		$("#activity-update").click(function(){
 
+            //执行流程
+            //1.得到文本框中的值，将值发送到修改页面
+            //2.修改成功，关闭模态窗口
 			$.ajax({
 
 				url:"workbench/activity/updateActivityList.do",
@@ -295,6 +299,7 @@
 		});
 	});
 
+	//分页
 	function pageList(pageNo,pageSize){
 
 		alert("页面加载时执行");
@@ -490,7 +495,7 @@
 								</select>
 							</div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
-                            <div class="col-sm-10" style="width: 300px;">n
+                            <div class="col-sm-10" style="width: 300px;">
                                 <input type="text" class="form-control" id="edit-name" value="发传单">
                             </div>
 						</div>

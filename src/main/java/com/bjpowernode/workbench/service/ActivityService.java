@@ -38,4 +38,8 @@ public interface ActivityService {
     List<Activity> getActivityListByNameNoByCLueId(Map<String, String> map);
 
     List<Activity> getActivityListByName(String activityName);
+
+    Map<String, Object> getUserListAndActivity(String id);
+
+    boolean updateActivityList(Activity activity);
 }
