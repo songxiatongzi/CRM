@@ -8,6 +8,7 @@ import com.bjpowernode.utils.PrintJson;
 import com.bjpowernode.utils.ServiceFactory;
 import com.bjpowernode.utils.UUIDUtil;
 import com.bjpowernode.workbench.domain.Tran;
+import com.bjpowernode.workbench.domain.TranHistory;
 import com.bjpowernode.workbench.service.CustomerService;
 import com.bjpowernode.workbench.service.TranService;
 import com.bjpowernode.workbench.service.impl.ClueServiceImpl;
@@ -50,7 +51,34 @@ public class TranController extends HttpServlet {
         }else if("/workbench/transaction/save.do".equals(path)){
 
             save(request,response);
+        }else if("/workbench/tran/getTranHistory.do".equals(path)){
+
+            getTranHistory(request,response);
         }
+    }
+
+    private void getTranHistory(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("展现交易历史");
+
+        String tranId = request.getParameter("tranId");
+
+        TranService ts = (TranService) ServiceFactory.getService(new TranServiceImpl());
+
+        List<TranHistory> tranHistoryList = ts.getTranHistory(tranId);
+
+        //这里除了交易历史集合，还有可能性
+        Map<String,String> pMap = (Map<String, String>) this.getServletContext().getAttribute("pMap");
+        for(TranHistory th : tranHistoryList){
+
+            String stage = th.getStage();
+
+            String possibility = pMap.get(stage);
+
+            th.setPossibility(possibility);
+        }
+
+        PrintJson.printJsonObj(response, tranHistoryList);
     }
 
     private void save(HttpServletRequest request, HttpServletResponse response) throws IOException {

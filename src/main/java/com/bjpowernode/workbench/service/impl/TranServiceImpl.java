@@ -12,6 +12,8 @@ import com.bjpowernode.workbench.domain.Tran;
 import com.bjpowernode.workbench.domain.TranHistory;
 import com.bjpowernode.workbench.service.TranService;
 
+import java.util.List;
+
 /**
  * Auther: 董怀宾_bjpowernode
  * Date: 2019/7/22 11:58
@@ -82,5 +84,14 @@ public class TranServiceImpl implements TranService {
         }
 
         return flag;
+    }
+
+    @Override
+    public List<TranHistory> getTranHistory(String tranId) {
+
+        List<TranHistory> tranHistoryList = tranHistoryDao.getTranHistory(tranId);
+
+        return tranHistoryList;
+
     }
 }

@@ -106,18 +106,32 @@
 
 		$.ajax({
 
-			url:"workbench/tran/showTranHistory.do",
+			url:"workbench/tran/getTranHistory.do",
 			data:{
 				//传递的参数，是交易的id
-				id:
+				//交易的id是交易历史的外键
+				tranId:"${tran.id}"
 			},
-			type:"",
-			dataType:"",
+			type:"get",
+			dataType:"json",
 			success:function(data){
 
+				var html = "";
+				$.each(data,function(i,n){
 
+					html +='<tr>';
+					html +='<td>'+n.stage+'</td>';
+					html +='<td>'+n.money+'</td>';
+					html +='<td>'+n.possibility+'</td>';
+					html +='<td>'+n.expectedDate+'</td>';
+					html +='<td>'+n.createTime+'</td>';
+					html +='<td>'+n.createBy+'</td>';
+					html +='</tr>';
+
+				});
+
+				$("#tranHistory").html(html);
 			}
-
 		});
 	}
 	
@@ -313,31 +327,18 @@
 							<td>创建人</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>资质审查</td>
-							<td>5,000</td>
-							<td>10</td>
-							<td>2017-02-07</td>
-							<td>2016-10-10 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
-						<tr>
-							<td>需求分析</td>
-							<td>5,000</td>
-							<td>20</td>
-							<td>2017-02-07</td>
-							<td>2016-10-20 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
-						<tr>
-							<td>谈判/复审</td>
-							<td>5,000</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>2017-02-09 10:10:10</td>
-							<td>zhangsan</td>
-						</tr>
+					<tbody id="tranHistory">
+					<%--交易历史--%>
+
+						<%--<tr>--%>
+							<%--<td>资质审查</td>--%>
+							<%--<td>5,000</td>--%>
+							<%--<td>10</td>--%>
+							<%--<td>2017-02-07</td>--%>
+							<%--<td>2016-10-10 10:10:10</td>--%>
+							<%--<td>zhangsan</td>--%>
+						<%--</tr>--%>
+
 					</tbody>
 				</table>
 			</div>

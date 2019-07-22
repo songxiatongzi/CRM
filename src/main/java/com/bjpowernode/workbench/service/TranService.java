@@ -1,6 +1,9 @@
 package com.bjpowernode.workbench.service;
 
 import com.bjpowernode.workbench.domain.Tran;
+import com.bjpowernode.workbench.domain.TranHistory;
+
+import java.util.List;
 
 /**
  * Auther: 董怀宾_bjpowernode
@@ -13,4 +16,5 @@ public interface TranService {
 
     boolean save(Tran tran, String customerName);
 
+    List<TranHistory> getTranHistory(String tranId);
 }
