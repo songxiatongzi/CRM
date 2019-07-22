@@ -119,6 +119,31 @@
     <url-pattern>/workbench/transaction/getUserList.do</url-pattern>
     <!--模糊查询客户姓名-->
     <url-pattern>/workbench/transaction/getCustomerName.do</url-pattern>
+    <!--[点击交易名称][根据交易id查单条]-->
+    <url-pattern>/workbench/transaction/detail.do</url-pattern>
+    <!--[交易列表][创建][保存]这里发送的是传统请求-->
+    <url-pattern>/workbench/transaction/save.do</url-pattern>
+  </servlet-mapping>
+
+  <!--客户模块(customer)-->
+  <servlet>
+    <servlet-name>CustomerController</servlet-name>
+    <servlet-class>com.bjpowernode.workbench.web.controller.CustomerController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CustomerController</servlet-name>
+    <!--客户模块执行分页操作-->
+    <url-pattern>/workbench/customer/pageList.do</url-pattern>
+  </servlet-mapping>
+
+  <!--联系人模块-->
+  <servlet>
+      <servlet-name>ContactsController</servlet-name>
+      <servlet-class>com.bjpowernode.workbench.web.controller.ContactsController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ContactsController</servlet-name>
+      <url-pattern>/workbench/contacts.do</url-pattern>
   </servlet-mapping>
 </web-app>
 

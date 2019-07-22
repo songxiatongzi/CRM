@@ -10,7 +10,7 @@
 	<%--模板--%>
 	<base href="<%=basePath%>">
 	<meta charset="UTF-8">
-
+	<title>客户模块(customer)</title>
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
@@ -19,6 +19,10 @@
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
+<%--添加分页插件--%>
+<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
+<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -28,8 +32,93 @@
 			//防止下拉菜单消失
 	        e.stopPropagation();
 	    });
-		
+
+		//页面加载时，从后台查询数据，返回查询列表，并完成分页操作
+		pageList(1,2);
+
+		//第二个查询入口，为查询按钮绑定事件
+		$("#selectBtn").click(function (){
+
+			//当点击查询按钮的时候，将查询的数据暂时存放到隐藏域中
+			$("#hidden-name").val($.trim($("#name").val()));
+			$("#hidden-owner").val($.trim($("#owner").val()));
+			$("#hidden-phone").val($.trim($("#phone").val()));
+			$("#hidden-website").val($.trim($("#webSite").val()));
+
+			pageList(1,2);
+
+		});
+
 	});
+
+	//分页查询
+	function pageList(pageNo,pageSize){
+
+		//当执行分页操作的时候，就将隐藏域中的数据取出来，在放到搜索框中
+		$("#webSite").val($.trim($("#hidden-website").val()));
+		$("#phone").val($.trim($("#hidden-phone").val()));
+		$("#owner").val($.trim($("#hidden-owner").val()));
+		$("#name").val($.trim($("#hidden-name").val()));
+
+
+		//执行分页查询操作
+		$.ajax({
+
+			url:"workbench/customer/pageList.do",
+			data:{
+				pageNo:pageNo,
+				pageSize:pageSize,
+				name:$.trim($("#name").val()),
+				owner:$.trim($("#owner").val()),
+				phone:$.trim($("#phone").val()),
+				website:$.trim($("#webSite").val())
+			},
+			type:"get",
+			dataType:"json",
+			success:function(data){
+				//返回值：总条数 total
+				//市场活动列表   customerList
+				var html = "";
+				$.each(data.dataList,function(i,n){
+
+					html += '<tr class="active">';
+					html += '<td><input type="checkbox" name = "selectOne" value="'+n.id+'"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/customer/detail.jsp?id='+n.id+'\';">'+n.name+'</a></td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.phone+'</td>';
+					html += '<td>'+n.website+'</td>';
+					html += '</tr>';
+
+				});
+
+				$("#tBody").html(html);
+
+				//处理分页查询信息[总页数是用来处理分页插件中使用的]
+				var totalPages = data.total % pageSize == 0 ? data.total / pageSize : parseInt(data.total/pageSize) + 1;
+
+				//添加分页插件
+				$("#customerPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					//该回调函数的触发时机：当点击分页查询的时候触发
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		});
+	}
 	
 </script>
 </head>
@@ -203,7 +292,7 @@
 	
 	
 	
-	
+	<%--主页面--%>
 	<div>
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">
@@ -211,47 +300,80 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<%--查询数据入口
+		参数：名称 name (公司名称)
+			所有者 owner
+			公司座机 phone
+			网站	webSite
+	--%>
 	<div style="position: relative; top: -20px; left: 0px; width: 100%; height: 100%;">
 	
 		<div style="width: 100%; position: absolute;top: 5px; left: 10px;">
-		
+
+			<%--
+				创建隐藏域
+				将点击查询后的数据暂时存放到隐藏域中
+
+			--%>
+			<div>
+				<input type="hidden" id="hidden-name">
+				<input type="hidden" id="hidden-owner">
+				<input type="hidden" id="hidden-phone">
+				<input type="hidden" id="hidden-website">
+			</div>
+
 			<div class="btn-toolbar" role="toolbar" style="height: 80px;">
 				<form class="form-inline" role="form" style="position: relative;top: 8%; left: 5px;">
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+
+						<%--其中的owner需要关联用户表进行查询
+
+						--%>
+				      <input class="form-control" type="text" id="owner">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司座机</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="phone">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">公司网站</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="webSite">
 				    </div>
 				  </div>
-				  
-				  <button type="submit" class="btn btn-default">查询</button>
+
+					<%--为保存按钮绑定事件
+						id = 'selectBtn'
+					--%>
+				  <button type="button" class="btn btn-default" id="selectBtn">查询</button>
 				  
 				</form>
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
+
+				<%--
+					客户创建，修改，删除 按钮
+					为创建，修改，删除 绑定事件
+					id = "addBtn"   创建之后保存  saveBtn
+					id = "updateBtn"
+					id = "deleteBtn"
+				--%>
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCustomerModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editCustomerModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
@@ -259,6 +381,8 @@
 				</div>
 				
 			</div>
+
+			<%--客户列表展示页面--%>
 			<div style="position: relative;top: 10px;">
 				<table class="table table-hover">
 					<thead>
@@ -270,58 +394,28 @@
 							<td>公司网站</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点</a></td>
-							<td>zhangsan</td>
-							<td>010-84846003</td>
-							<td>http://www.bjpowernode.com</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点</a></td>
-                            <td>zhangsan</td>
-                            <td>010-84846003</td>
-                            <td>http://www.bjpowernode.com</td>
-                        </tr>
+					<tbody id="tBody">
+						<%--客户列表详细信息页页面--%>
+						<%--<tr>--%>
+							<%--<td><input type="checkbox" /></td>--%>
+							<%--<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">动力节点</a></td>--%>
+							<%--<td>zhangsan</td>--%>
+							<%--<td>010-84846003</td>--%>
+							<%--<td>http://www.bjpowernode.com</td>--%>
+						<%--</tr>--%>
+
 					</tbody>
 				</table>
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+
+				<%--分页组件
+					在这里需要引入外部组件
+				--%>
+				<div id="customerPage"></div>
+
+
 			</div>
 			
 		</div>

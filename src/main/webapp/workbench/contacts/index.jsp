@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 	request.getServerPort() + request.getContextPath() + "/";
 %>
@@ -19,6 +20,10 @@
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
+		<%--时间控件--%>
+<link rel="stylesheet" type="text/css" href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -28,8 +33,97 @@
 			//防止下拉菜单消失
 	        e.stopPropagation();
 	    });
+
+		//为生日添加时间控件
+		$(".birth").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
+
+		//执行分页查询
+		pageList(1,2);
+
+		//点击查询按钮，执行分页查询
+		$("#selectBtn").click(function() {
+
+
+
+		});
 		
 	});
+
+	//分页查询(页数，每页条数)
+	function pageList(pageNo,pageSize){
+
+		$.ajax({
+
+			url:"workbench/contacts/pageList.do",
+			data:{
+
+				pageNo:pageNo,
+				pageSize:pageSize,
+				owner:$.trim($("#owner").val()),
+				fullname:$.trim($("#fullname").val()),
+				customerId:$.trim($("#customerId").val()),
+				source:$.trim($("#source").val()),
+				birth:$.trim($("#birth").val())
+
+			},
+			type:"get",
+			dataType:"json",
+			success:function(data){
+
+				//返回总条数
+				//返回联系人集合
+				//将集合封装到集合或者 vo对象中
+				var html = "";
+				$.each(data.contactsList,function(i,n){
+
+					html += '<tr>';
+					html += '<td><input type="checkbox" value="'+n.id+'" name="selectOne"/></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/contacts/detail.jsp?id='+n.id+'\';">'+n.fullname+'</a></td>';
+					html += '<td>'+n.customerId+'</td>';
+					html += '<td>'+n.owner+'</td>';
+					html += '<td>'+n.source+'</td>';
+					html += '<td>'+n.birth+'</td>';
+					html += '</tr>';
+
+				})
+
+				//将查询好的数据封装到body体重
+				$("#contacts").html(html);
+
+				//计算总页数
+				var totalPages = data.total % pageSize == 0 ?data.total /pageSize :parseInt(data.total/pageSize) + 1;
+
+				//调用分页，进行分页
+				$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+
+			}
+		});
+
+	}
 	
 </script>
 </head>
@@ -312,7 +406,7 @@
 	
 	
 	
-	
+	<%--主页面--%>
 	<div>
 		<div style="position: relative; left: 10px; top: -10px;">
 			<div class="page-header">
@@ -320,7 +414,14 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<%--查询输入文本框
+		owner
+		fullname
+		customerName
+		source
+		birth
+	--%>
 	<div style="position: relative; top: -20px; left: 0px; width: 100%; height: 100%;">
 	
 		<div style="width: 100%; position: absolute;top: 5px; left: 10px;">
@@ -331,21 +432,26 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="owner">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">姓名</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="fullname">
 				    </div>
 				  </div>
-				  
+
+					<%--
+						注意这个客户姓名id
+						客户姓名的是一个uuid生成的字符串
+
+					--%>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">客户名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="customerId">
 				    </div>
 				  </div>
 				  
@@ -354,22 +460,17 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">来源</div>
-				      <select class="form-control" id="edit-clueSource">
-						  <option></option>
-						  <option>广告</option>
-						  <option>推销电话</option>
-						  <option>员工介绍</option>
-						  <option>外部介绍</option>
-						  <option>在线商场</option>
-						  <option>合作伙伴</option>
-						  <option>公开媒介</option>
-						  <option>销售邮件</option>
-						  <option>合作伙伴研讨会</option>
-						  <option>内部研讨会</option>
-						  <option>交易会</option>
-						  <option>web下载</option>
-						  <option>web调研</option>
-						  <option>聊天</option>
+						<%--
+							来源从全局作用中获取
+
+						--%>
+				      <select class="form-control" id="source">
+						  <option value="0">--请选择--</option>
+
+						  <c:forEach var="s" items="${source}">
+							  <option value="${s.value}">${s.text}</option>
+						  </c:forEach>
+
 						</select>
 				    </div>
 				  </div>
@@ -377,14 +478,29 @@
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">生日</div>
-				      <input class="form-control" type="text">
+
+						<%--
+							生日引入时间控件
+							.birth [10位]
+						--%>
+				      <input class="form-control birth" type="text" readonly id="birth">
 				    </div>
 				  </div>
-				  
-				  <button type="submit" class="btn btn-default">查询</button>
+
+					<%--为店家查询添加事件
+						id = "selectBtn";
+
+					--%>
+				  <button type="button" class="btn btn-default" id="selectBtn">查询</button>
 				  
 				</form>
 			</div>
+
+			<%--
+				为 创建，修改，删除，按钮添加事件
+
+				使用时，将 data-toggle="modal" data-target="#createContactsModal" 删除
+			--%>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createContactsModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
@@ -394,6 +510,11 @@
 				
 				
 			</div>
+
+			<%--
+				具体联系人列表展示页面
+
+			--%>
 			<div style="position: relative;top: 20px;">
 				<table class="table table-hover">
 					<thead>
@@ -406,59 +527,37 @@
 							<td>生日</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
-							<td>动力节点</td>
-							<td>zhangsan</td>
-							<td>广告</td>
-							<td>2000-10-10</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>
-                            <td>动力节点</td>
-                            <td>zhangsan</td>
-                            <td>广告</td>
-                            <td>2000-10-10</td>
-                        </tr>
+					<tbody id="contactsBody">
+						<%--<tr>--%>
+							<%--<td><input type="checkbox" /></td>--%>
+							<%--<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">李四</a></td>--%>
+							<%--<td>动力节点</td>--%>
+							<%--<td>zhangsan</td>--%>
+							<%--<td>广告</td>--%>
+							<%--<td>2000-10-10</td>--%>
+						<%--</tr>--%>
+
 					</tbody>
 				</table>
 			</div>
-			
+
+			<%--分页触发的几种形式
+
+				分页，这里需要添加分页组件
+				打开联系人列表的时候，进行分页
+				[查询按钮]
+				创建，修改，删除，分页组件执行
+				[分页组件按钮]点击后执行[分页]
+
+			--%>
 			<div style="height: 50px; position: relative;top: 10px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
+
+				<%--将分页组件添加到这里
+					需要引入外部组件
+
+				--%>
+				<div id="activityPage">
+
 				</div>
 			</div>
 			
