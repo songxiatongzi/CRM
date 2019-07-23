@@ -12,7 +12,9 @@ import com.bjpowernode.workbench.domain.Tran;
 import com.bjpowernode.workbench.domain.TranHistory;
 import com.bjpowernode.workbench.service.TranService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Auther: 董怀宾_bjpowernode
@@ -93,5 +95,21 @@ public class TranServiceImpl implements TranService {
 
         return tranHistoryList;
 
+    }
+
+    @Override
+    public Map<String, Object> getTranCharts() {
+
+        //获得交易的总条数
+        int total = tranDao.getTotal();
+        //获得交易的列表
+        //通过stage分组， 得到每个stage 下的数量和对应的stage
+        List<Map<String,Object>> dataList = tranDao.getTranChartsList();
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("dataList",dataList);
+
+        return map;
     }
 }

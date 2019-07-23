@@ -125,6 +125,8 @@
     <url-pattern>/workbench/transaction/save.do</url-pattern>
     <!--展现交易历史模块-->
     <url-pattern>/workbench/tran/getTranHistory.do</url-pattern>
+    <!--[交易模块][统计图表漏斗图]-->
+    <url-pattern>/workbench/transaction/getTranCharts.do</url-pattern>
   </servlet-mapping>
 
   <!--客户模块(customer)-->

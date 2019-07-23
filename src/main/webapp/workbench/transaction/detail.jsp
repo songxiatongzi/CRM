@@ -1,5 +1,31 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="com.bjpowernode.settings.domain.DicValue" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.bjpowernode.workbench.domain.Tran" %>
 <%
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 	request.getServerPort() + request.getContextPath() + "/";
+
+	Map<String,String> pMap = (Map<String, String>) application.getAttribute("pMap");
+
+	List<DicValue> dvList = (List<DicValue>) application.getAttribute("stage");
+
+    //准备正常阶段，和后面的丢失阶段的分界点的下标
+    int point = 0;
+    for(int i = 0; i< dvList.size() ; i++){
+        DicValue dv = dvList.get(i);
+
+        String stage = dv.getValue();
+        String possibility = pMap.get(stage);
+
+        if("0".equals(possibility)){
+
+            point = i;
+            break;
+
+        }
+
+    }
+
 %>
 <%--设置字符集
 	所有html修改成为jsp 的网页【将相对路径设置为绝对路径】
@@ -161,25 +187,54 @@
 	<!-- 阶段状态 -->
 	<div style="position: relative; left: 40px; top: -50px;">
 		阶段&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="资质审查" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="需求分析" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="价值建议" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="确定决策者" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-map-marker mystage" data-toggle="popover" data-placement="bottom" data-content="提案/报价" style="color: #90F790;"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="谈判/复审"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="成交"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="丢失的线索"></span>
-		-----------
-		<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="因竞争丢失关闭"></span>
-		-----------
-		<span class="closingDate">2010-10-10</span>
+		<%--<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="资质审查" style="color: #90F790;"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="需求分析" style="color: #90F790;"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="价值建议" style="color: #90F790;"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-ok-circle mystage" data-toggle="popover" data-placement="bottom" data-content="确定决策者" style="color: #90F790;"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-map-marker mystage" data-toggle="popover" data-placement="bottom" data-content="提案/报价" style="color: #90F790;"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="谈判/复审"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="成交"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="丢失的线索"></span>--%>
+		<%---------------%>
+		<%--<span class="glyphicon glyphicon-record mystage" data-toggle="popover" data-placement="bottom" data-content="因竞争丢失关闭"></span>--%>
+		<%---------------%>
+		<%--<span class="closingDate">2010-10-10</span>--%>
+
+        <%--添加java脚本--%>
+        <%
+            //${requestScope.t.stage}
+            //request.setAttribute("tran",tran);
+            //准备当前阶段
+            //从域对象中取值
+            Tran t = (Tran) request.getAttribute("tran");
+            //准备当前阶段的可能性
+            //从当前阶段中进行取值---->tran为当前对象，从当前阶段取出交易阶段
+            String currentStage =  t.getStage();
+
+            //准备当前阶段的可能性
+            //从当前阶段中中得到所对应的值【可能性】
+            String currenPossibilty = pMap.get(currentStage);
+
+            //如果当前阶段的可能性为0
+            //为第八阶段，和第九阶段
+            if("0".equals(currenPossibilty)){
+
+                //遍历数据字典值列表阶段和对应的可能行
+
+
+            //如果当前阶段不为0
+            //前7个阶段【绿色，绿圈】
+            }else{
+
+            }
+        %>
 	</div>
 	
 	<!-- 交易的详细信息 -->

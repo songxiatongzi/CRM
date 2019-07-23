@@ -4,6 +4,7 @@ import com.bjpowernode.workbench.domain.Tran;
 import com.bjpowernode.workbench.domain.TranHistory;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Auther: 董怀宾_bjpowernode
@@ -17,4 +18,8 @@ public interface TranService {
     boolean save(Tran tran, String customerName);
 
     List<TranHistory> getTranHistory(String tranId);
+
+    Map<String, Object> getTranCharts();
+
+
 }

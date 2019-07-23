@@ -85,6 +85,22 @@
         where tran.id=#{id}
 
     </select>
+
+    <!--查询总条数-->
+    <select id="getTotal" resultType="int">
+        select count(*)
+        from tbl_tran
+    </select>
+
+    <!--getTranChartsList-->
+    <select id="getTranChartsList" resultType="Map">
+        select
+        count(*) as value,
+        stage as name
+        from tbl_tran
+
+        group by stage
+    </select>
 </mapper>
 
 
