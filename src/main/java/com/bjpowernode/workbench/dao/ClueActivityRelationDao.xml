@@ -28,6 +28,21 @@
 
         )
     </insert>
+
+    <!--查询与线索关联的市场活动列表-->
+    <select id="getActivityListByClueId" resultType="ClueActivityRelation">
+
+        select *
+        from tbl_clue_activity_relation
+        where clueId = #{clueId}
+
+    </select>
+
+    <!--通过线索id 解除线索与市场活动的关联关系-->
+    <delete id="delete">
+        delete from tbl_clue_activity_relation
+        where clueId = #{clueId}
+    </delete>
 </mapper>
 
 

@@ -9,6 +9,7 @@ import com.bjpowernode.utils.ServiceFactory;
 import com.bjpowernode.utils.UUIDUtil;
 import com.bjpowernode.workbench.domain.Activity;
 import com.bjpowernode.workbench.domain.Clue;
+import com.bjpowernode.workbench.domain.Tran;
 import com.bjpowernode.workbench.service.ActivityService;
 import com.bjpowernode.workbench.service.ClueService;
 import com.bjpowernode.workbench.service.impl.ActivityServiceImpl;
@@ -73,10 +74,52 @@ public class ClueController extends HttpServlet {
         }
     }
 
-    private void convent(HttpServletRequest request, HttpServletResponse response) {
+    private void convent(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         System.out.println("[转换线索][点击线索转换]");
 
+        String clueId = request.getParameter("clueId");
+        String flag = request.getParameter("flag");
+        String createBy = ((User)request.getSession().getAttribute("user")).getName();
+        Tran tran = null;
+
+        if("a".equals(flag)){
+
+            //创建一笔交易
+            String money = request.getParameter("money");
+            String name = request.getParameter("name");
+            String expectedDate = request.getParameter("expectedDate"); //预计成交日期
+            String stage = request.getParameter("stage");
+            String activityId = request.getParameter("activityId");
+
+            String id = UUIDUtil.getUUID();
+            String createTime = DateTimeUtil.getSysTime();
+
+
+            tran = new Tran();
+            tran.setCreateTime(createTime);
+            tran.setStage(stage);
+            tran.setExpectedDate(expectedDate);
+            tran.setCreateBy(createBy);
+            tran.setId(id);
+            tran.setMoney(money);
+            tran.setName(name);
+            tran.setActivityId(activityId);
+
+        }
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        //向业务层传递的参数
+        //在业务层判断tran，如果tran为空，就添加一笔交易
+        //因为后端拿不到创建人
+        //可以传递 request ， 因为分层之后，传递到业务层，这样不利于分层开发
+        //？这里为什么不能直接从user中取值
+        boolean flag1 = cs.convent(clueId,tran,createBy);
+
+        if(flag1){
+            response.sendRedirect(request.getContextPath()+"/workbench/clue/index.jsp");
+        }
+        //如果查询错误，转达错误信息详情页
 
     }
 

@@ -106,7 +106,10 @@
 		$("#convertBtn").click(function(){
 			//当按钮选中的时候，表示需要创建一条交易
 			if($("#isCreateTransaction").prop("checked",true)){
+
+				//当按钮选中的时候，就创建一笔交易
 				$("#tranForm").submit();
+
 			}else{
 				//没有选中的时候，不创建交易，执行传统请求即可
 				window.location.herf="workbench/clue/convent.do?clueId=${param.id}";
@@ -183,6 +186,8 @@
 	&owner=${c.owner}
 		通过param进行取值[使用了隐含对象]
 	--%>
+
+	<%--转换弹出窗口--%>
 	<div id="title" class="page-header" style="position: relative; left: 20px;">
 		<h4>转换线索 <small>${param.fullname}${param.appellation}-${param.company}</small></h4>
 	</div>
@@ -192,6 +197,8 @@
 	<div id="create-contact" style="position: relative; left: 40px; height: 35px;">
 		新建联系人：${param.fullname}${param.appellation}
 	</div>
+
+	<%--为客户创建交易按钮帮顶事件--%>
 	<div id="create-transaction1" style="position: relative; left: 40px; height: 35px; top: 25px;">
 		<input type="checkbox" id="isCreateTransaction"/>
 		为客户创建交易
@@ -206,9 +213,19 @@
 			stage
 			activityId
 		--%>
+		<%--提交表单--%>
 		<form action="workbench/clue/convent.do" method="post" id="tranForm">
 
-			<%--以提交表单的方式提交线索的id--%>
+			<%--这里设置一个隐藏域
+				创建一个flag ,后端根据接受的flag的值，进行判断，这个表单是不是有值提交过去
+				flag = a;提交表单
+
+			--%>
+			<input type="hidden" name="flag" value="a">
+
+			<%--以提交表单的方式提交线索的id
+				注意这个线索的id 不管提交表单，还是不提交表单，这个线索id都要提交
+			--%>
 			<input type="hidden" name="clueId" value="${param.id}">
 		  <div class="form-group" style="width: 400px; position: relative; left: 20px;">
 		    <label for="money">金额<span>(￥)</span></label>
@@ -256,6 +273,8 @@
 		<%--从参数列表中获取所有者--%>
 		<b>${param.owner}</b>
 	</div>
+
+	<%--转换按钮--%>
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
 		<%--
 			为线索转换按钮绑定事件

@@ -100,6 +100,51 @@
         )
 
     </insert>
+
+    <!--    name[customer]
+            company[]
+    -->
+    <select id="getByName" resultType="Customer">
+
+        select *
+        from tbl_customer
+        where name = #{company}
+
+    </select>
+
+    <!--添加客户-->
+    <insert id="save" parameterType="customer" >
+        insert into tbl_customer
+        (
+
+        id,
+        owner,
+        name,
+        website,
+        phone,
+        createBy,
+        createTime,
+        contactSummary,
+        nextContactTime,
+        description,
+        address
+
+        )values(
+
+        #{id},
+        #{owner},
+        #{name},
+        #{website},
+        #{phone},
+        #{createBy},
+        #{createTime},
+        #{contactSummary},
+        #{nextContactTime},
+        #{description},
+        #{address}
+
+        )
+    </insert>
 </mapper>
 
 

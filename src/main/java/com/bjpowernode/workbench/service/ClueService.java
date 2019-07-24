@@ -2,6 +2,7 @@ package com.bjpowernode.workbench.service;
 
 import com.bjpowernode.settings.domain.User;
 import com.bjpowernode.workbench.domain.Clue;
+import com.bjpowernode.workbench.domain.Tran;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface ClueService {
     List<Clue> getClueList();
 
     boolean bund(String clueId, String[] activityIds);
+
+    boolean convent(String clueId, Tran tran, String createBy);
 }

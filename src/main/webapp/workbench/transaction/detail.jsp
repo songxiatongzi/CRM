@@ -176,10 +176,10 @@
 	<!-- 大标题 -->
 	<div style="position: relative; left: 40px; top: -30px;">
 		<div class="page-header">
-			<h3>动力节点-交易01 <small>￥5,000</small></h3>
+			<h3>${tran.customerId}--${tran.name}&nbsp;&nbsp;<small>￥${tran.money}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='edit.jsp';"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/transaction/edit.jsp';"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>

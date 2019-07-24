@@ -114,6 +114,21 @@
             on c.owner = u.id
 
     </select>
+
+    <!--根据clueId 查单条-->
+    <select id="getClueById" resultType="Clue">
+
+        select *
+        from tbl_clue
+        where id = #{clueId}
+
+    </select>
+
+    <!--通过id删除单条记录-->
+    <delete id="delteClueByClueId">
+        delete from tbl_clue
+        where id = #{clueId}
+    </delete>
 </mapper>
 
 

@@ -17,4 +17,9 @@ public interface CustomerDao {
     Customer getCustomerByName(String customerName);
 
     int saveCustomer(Customer c);
+
+    Customer getByName(String company);
+
+    int save(Customer customer);
+
 }
